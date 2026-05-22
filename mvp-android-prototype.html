@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototipo MVP Android | Proteccion Antiestafas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --ink: #10223c;
+      --ink-soft: #506076;
+      --line: rgba(16, 34, 60, 0.14);
+      --panel: rgba(255, 255, 255, 0.74);
+      --panel-strong: #ffffff;
+      --brand: #143d8d;
+      --brand-deep: #0b2861;
+      --alert: #ca4e2c;
+      --alert-soft: #fce2da;
+      --safe: #1a7f5a;
+      --safe-soft: #dff5eb;
+      --warn: #b98519;
+      --warn-soft: #fff1cc;
+      --shadow: 0 24px 60px rgba(16, 34, 60, 0.18);
+      --radius-xl: 32px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(20, 61, 141, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(202, 78, 44, 0.12), transparent 24%),
+        linear-gradient(135deg, #f7f1e8 0%, #efe7d8 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .shell {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .summary {
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      position: sticky;
+      top: 24px;
+      overflow: hidden;
+    }
+
+    .summary::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(20, 61, 141, 0.1), transparent 45%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 40%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(20, 61, 141, 0.1);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .summary h1 {
+      margin: 18px 0 14px;
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.6rem, 4vw, 4.6rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .summary p {
+      margin: 0 0 18px;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.72;
+      max-width: 62ch;
+    }
+
+    .pill-row,
+    .principles,
+    .quick-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .pill-row {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 24px 0 18px;
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .pill strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .pill span {
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .section-label {
+      margin: 26px 0 10px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--brand);
+      text-transform: uppercase;
+    }
+
+    .principles {
+      grid-template-columns: 1fr;
+    }
+
+    .principle {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+      background: rgba(255, 255, 255, 0.66);
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .principle .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .principle strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .principle span {
+      color: var(--ink-soft);
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    .quick-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 18px;
+    }
+
+    .quick-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(16, 34, 60, 0.08);
+    }
+
+    .quick-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .quick-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .prototype-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone {
+      width: min(100%, 430px);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.98)),
+        #fff;
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      border-radius: 38px;
+      box-shadow: 0 30px 80px rgba(16, 34, 60, 0.24);
+      padding: 14px;
+      position: relative;
+    }
+
+    .phone::before {
+      content: "";
+      display: block;
+      width: 128px;
+      height: 26px;
+      border-radius: 0 0 18px 18px;
+      background: #10223c;
+      margin: -14px auto 10px;
+    }
+
+    .screen {
+      min-height: 820px;
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at top right, rgba(20, 61, 141, 0.11), transparent 24%),
+        linear-gradient(180deg, #fcfaf7 0%, #f7f1e8 100%);
+      padding: 20px 18px 22px;
+      display: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen.active {
+      display: block;
+      animation: fade-in 220ms ease;
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .status-bar,
+    .top-nav,
+    .mini-list,
+    .segmented,
+    .actions,
+    .sticky-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .status-bar {
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: var(--ink-soft);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .screen-card {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 18px 40px rgba(16, 34, 60, 0.08);
+      margin-bottom: 14px;
+    }
+
+    .screen-hero {
+      background:
+        linear-gradient(135deg, rgba(11, 40, 97, 0.98), rgba(20, 61, 141, 0.88)),
+        var(--brand);
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .screen-hero::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      right: -50px;
+      top: -40px;
+    }
+
+    .screen-hero h2,
+    .section-title {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      letter-spacing: -0.03em;
+    }
+
+    .screen-hero h2 {
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .screen-hero p {
+      position: relative;
+      z-index: 1;
+      color: rgba(255, 255, 255, 0.84);
+      margin: 0;
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .top-nav {
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .top-nav-left,
+    .top-nav-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ghost-btn,
+    .icon-btn,
+    .cta,
+    .secondary-btn,
+    .danger-btn {
+      border: 0;
+      cursor: pointer;
+      transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+
+    .ghost-btn,
+    .icon-btn {
+      border-radius: 14px;
+      height: 42px;
+      padding: 0 14px;
+      background: rgba(255, 255, 255, 0.75);
+      color: var(--ink);
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      font-weight: 700;
+    }
+
+    .icon-btn {
+      width: 42px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+    }
+
+    .cta,
+    .secondary-btn,
+    .danger-btn {
+      width: 100%;
+      border-radius: 18px;
+      padding: 16px 18px;
+      font-weight: 800;
+      font-size: 0.98rem;
+      letter-spacing: -0.01em;
+    }
+
+    .cta {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(20, 61, 141, 0.24);
+    }
+
+    .secondary-btn {
+      background: #fff;
+      color: var(--brand);
+      border: 1px solid rgba(20, 61, 141, 0.16);
+    }
+
+    .danger-btn {
+      background: var(--alert);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(202, 78, 44, 0.22);
+    }
+
+    .ghost-btn:hover,
+    .icon-btn:hover,
+    .cta:hover,
+    .secondary-btn:hover,
+    .danger-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .helper {
+      color: var(--ink-soft);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .mini-list {
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .mini-chip {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      color: var(--ink-soft);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid rgba(16, 34, 60, 0.12);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.86);
+      padding: 14px 15px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .field textarea {
+      min-height: 136px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: rgba(20, 61, 141, 0.48);
+      box-shadow: 0 0 0 4px rgba(20, 61, 141, 0.1);
+    }
+
+    .actions {
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .actions > * {
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 1.45rem;
+      line-height: 1.05;
+      margin-bottom: 8px;
+    }
+
+    .section-copy {
+      margin: 0 0 16px;
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+      line-height: 1.58;
+    }
+
+    .feature-box,
+    .result-box,
+    .setting-row,
+    .timeline-item,
+    .choice-card {
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .feature-box strong,
+    .timeline-item strong,
+    .choice-card strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.94rem;
+    }
+
+    .feature-box span,
+    .timeline-item span,
+    .choice-card span,
+    .setting-row span {
+      color: var(--ink-soft);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .choice-card {
+      cursor: pointer;
+      transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    .choice-card.active {
+      border-color: rgba(20, 61, 141, 0.48);
+      box-shadow: 0 12px 28px rgba(20, 61, 141, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .choice-card small {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--brand);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .highlight {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      margin-bottom: 12px;
+      border: 1px solid transparent;
+    }
+
+    .highlight strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .highlight.safe {
+      background: var(--safe-soft);
+      border-color: rgba(26, 127, 90, 0.14);
+    }
+
+    .highlight.warn {
+      background: var(--warn-soft);
+      border-color: rgba(185, 133, 25, 0.14);
+    }
+
+    .highlight.alert {
+      background: var(--alert-soft);
+      border-color: rgba(202, 78, 44, 0.14);
+    }
+
+    .highlight em {
+      font-style: normal;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .sticky-actions {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 20px;
+      gap: 10px;
+    }
+
+    .sticky-actions > * {
+      flex: 1;
+    }
+
+    .nav-dock {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      border-radius: 20px;
+      margin-top: 8px;
+      box-shadow: 0 12px 24px rgba(16, 34, 60, 0.08);
+    }
+
+    .nav-dock button {
+      border: 0;
+      background: transparent;
+      color: var(--ink-soft);
+      padding: 10px 6px;
+      border-radius: 14px;
+      font-size: 0.77rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .nav-dock button.active {
+      background: rgba(20, 61, 141, 0.1);
+      color: var(--brand);
+    }
+
+    .result-box {
+      display: none;
+    }
+
+    .result-box.visible {
+      display: block;
+    }
+
+    .result-box ul,
+    .timeline-list {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--ink-soft);
+    }
+
+    .result-box li,
+    .timeline-list li {
+      margin-bottom: 8px;
+      line-height: 1.48;
+    }
+
+    .timeline-item {
+      padding-left: 18px;
+      border-left: 4px solid rgba(20, 61, 141, 0.22);
+    }
+
+    .toggle {
+      width: 48px;
+      height: 28px;
+      border-radius: 999px;
+      background: rgba(16, 34, 60, 0.14);
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .toggle::after {
+      content: "";
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      box-shadow: 0 4px 10px rgba(16, 34, 60, 0.12);
+      transition: left 140ms ease, background 140ms ease;
+    }
+
+    .toggle.active {
+      background: rgba(20, 61, 141, 0.5);
+    }
+
+    .toggle.active::after {
+      left: 23px;
+      background: var(--brand);
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: min(360px, calc(100vw - 36px));
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: #10223c;
+      color: #fff;
+      box-shadow: 0 22px 40px rgba(16, 34, 60, 0.3);
+      opacity: 0;
+      transform: translateY(18px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 10;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .segmented {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(16, 34, 60, 0.08);
+      padding: 5px;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      gap: 4px;
+    }
+
+    .segmented button {
+      flex: 1;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      padding: 10px 8px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+      cursor: pointer;
+    }
+
+    .segmented button.active {
+      background: #fff;
+      color: var(--brand);
+      box-shadow: 0 8px 20px rgba(16, 34, 60, 0.08);
+    }
+
+    .empty-state {
+      padding: 24px 18px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      border: 1px dashed rgba(16, 34, 60, 0.14);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 1100px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        position: static;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        padding: 18px 12px 28px;
+      }
+
+      .summary {
+        padding: 24px 18px;
+        border-radius: 24px;
+      }
+
+      .pill-row,
+      .quick-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone {
+        width: 100%;
+      }
+
+      .screen {
+        min-height: 760px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="hero">
+      <section class="summary">
+        <span class="eyebrow">MVP HTML interactivo</span>
+        <h1>Proteccion Antiestafas para Android</h1>
+        <p>
+          Prototipo funcional en HTML, pensado para mostrar el flujo principal de la app en no mas de 3 clics por tarea critica.
+          El foco esta puesto en analizar mensajes sospechosos, pedir ayuda rapido y cortar decisiones tomadas bajo presion.
+        </p>
+
+        <div class="pill-row">
+          <div class="pill">
+            <strong>1. Regla de 3 clics</strong>
+            <span>Desde Home a resultado o ayuda en 2 o 3 toques.</span>
+          </div>
+          <div class="pill">
+            <strong>2. Interactividad real</strong>
+            <span>Formulario, analisis dinamico, estados, toggles y feedback visual.</span>
+          </div>
+          <div class="pill">
+            <strong>3. Way back claro</strong>
+            <span>Todas las pantallas intermedias tienen `Volver` o `Inicio`.</span>
+          </div>
+        </div>
+
+        <div class="section-label">Pantallas MVP</div>
+        <div class="quick-grid">
+          <div class="quick-card">
+            <strong>Onboarding minimo</strong>
+            <p>Presenta la propuesta, deja un nombre, elige nivel de proteccion y entra.</p>
+          </div>
+          <div class="quick-card">
+            <strong>Home simple</strong>
+            <p>Analizar mensaje, pedir ayuda, chequeo post-llamada y accesos secundarios.</p>
+          </div>
+          <div class="quick-card">
+            <strong>Analisis guiado</strong>
+            <p>Recibe mensaje copiado, detecta urgencia, bancos, links, codigos y transferencias.</p>
+          </div>
+          <div class="quick-card">
+            <strong>Contacto de confianza</strong>
+            <p>Alta rapida de contacto y accion directa para pedir apoyo en contexto.</p>
+          </div>
+        </div>
+
+        <div class="section-label">Requisitos del prototipo</div>
+        <div class="principles">
+          <div class="principle">
+            <div class="num">01</div>
+            <div>
+              <strong>Flujo principal sin perdida</strong>
+              <span>El usuario llega a una recomendacion clara sin menus profundos ni pasos escondidos.</span>
+            </div>
+          </div>
+          <div class="principle">
+            <div class="num">02</div>
+            <div>
+              <strong>Botones reactivos y estados visibles</strong>
+              <span>La demo responde con resultados, toasts, resaltados y cambios de proteccion.</span>
+            </div>
+          </div>
+          <div class="principle">
+            <div class="num">03</div>
+            <div>
+              <strong>Retorno permanente</strong>
+              <span>Desde cualquier paso intermedio se puede volver atras o regresar directo al inicio.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="prototype-wrap">
+        <div class="phone">
+          <div id="screen-onboarding-1" class="screen active" data-root="true">
+            <div class="status-bar">
+              <span>9:41</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="screen-card screen-hero">
+              <span class="tag">Proteccion activa</span>
+              <h2>No actues bajo presion.</h2>
+              <p>La app te ayuda a revisar mensajes y llamadas sospechosas antes de compartir datos, hacer transferencias o responder con apuro.</p>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Un flujo claro</h3>
+              <p class="section-copy">En el MVP, las acciones mas importantes se resuelven rapido y con palabras simples.</p>
+              <div class="feature-box">
+                <strong>Analizar mensaje</strong>
+                <span>Pega o comparte un texto y te devolvemos una recomendacion inmediata.</span>
+              </div>
+              <div class="feature-box">
+                <strong>Pedir ayuda</strong>
+                <span>Contacta a tu persona de confianza en un toque si sentis duda o presion.</span>
+              </div>
+              <div class="feature-box">
+                <strong>Revisar llamada</strong>
+                <span>Chequeo post-llamada para detectar pedidos de dinero, codigos o identidades falsas.</span>
+              </div>
+            </div>
+            <div class="sticky-actions">
+              <button class="cta" data-go="screen-onboarding-2">Empezar</button>
+            </div>
+          </div>
+
+          <div id="screen-onboarding-2" class="screen">
+            <div class="status-bar">
+              <span>9:42</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Paso 2 de 3</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Como queres que te llamemos</h3>
+              <p class="section-copy">Esto personaliza las alertas y deja la experiencia mas humana para la persona que usa la app.</p>
+              <div class="field">
+                <label for="userName">Nombre</label>
+                <input id="userName" type="text" placeholder="Ejemplo: Marta">
+              </div>
+              <div class="field">
+                <label for="userAge">Perfil</label>
+                <select id="userAge">
+                  <option value="adulto mayor">Adulto mayor</option>
+                  <option value="adulto con bajo conocimiento digital">Adulto con bajo conocimiento digital</option>
+                  <option value="familiar cuidador">Familiar cuidador</option>
+                </select>
+              </div>
+              <div class="highlight warn">
+                <div>
+                  <strong>Lenguaje simple</strong>
+                  <span>El prototipo evita tecnicismos y explica consecuencias concretas.</span>
+                </div>
+                <em>UX</em>
+              </div>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="cta" id="continueToLevel">Continuar</button>
+            </div>
+          </div>
+
+          <div id="screen-onboarding-3" class="screen">
+            <div class="status-bar">
+              <span>9:43</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Paso 3 de 3</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Elegi el nivel de proteccion</h3>
+              <p class="section-copy">Cada opcion explica que hace la app para que el usuario entienda el impacto sin configuraciones complejas.</p>
+              <div class="choice-card active" data-mode-card="acompañado" data-mode-title="Modo acompañado">
+                <strong>Modo acompañado</strong>
+                <span>Te avisa cuando detecta riesgo y te sugiere pedir ayuda.</span>
+                <small>Recomendado para el MVP</small>
+              </div>
+              <div class="choice-card" data-mode-card="suave" data-mode-title="Modo suave">
+                <strong>Modo suave</strong>
+                <span>Solo muestra advertencias, sin escalar automaticamente.</span>
+              </div>
+              <div class="choice-card" data-mode-card="reforzado" data-mode-title="Modo reforzado">
+                <strong>Modo reforzado</strong>
+                <span>Da alertas mas fuertes y prioriza el contacto con apoyo externo.</span>
+              </div>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="cta" id="finishOnboarding">Entrar a la app</button>
+            </div>
+          </div>
+
+          <div id="screen-home" class="screen">
+            <div class="status-bar">
+              <span>9:44</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="screen-card screen-hero">
+              <span class="tag">Estado actual</span>
+              <h2 id="homeGreeting">Hola.</h2>
+              <p id="homeSummary">Modo acompañado. Todavia no cargaste un contacto de confianza.</p>
+            </div>
+            <div class="screen-card">
+              <div class="highlight safe">
+                <div>
+                  <strong>Home pensada para entenderse en 3 segundos</strong>
+                  <span>Las 3 tareas centrales viven arriba de todo.</span>
+                </div>
+                <em>MVP</em>
+              </div>
+              <button class="cta" data-go="screen-analyze" style="margin-bottom:10px;">Analizar mensaje</button>
+              <button class="danger-btn" data-go="screen-help" style="margin-bottom:10px;">Pedir ayuda</button>
+              <button class="secondary-btn" data-go="screen-call-check">Chequeo post-llamada</button>
+              <div class="mini-list">
+                <span class="mini-chip">Contacto: <strong id="contactBadge">sin definir</strong></span>
+                <span class="mini-chip">Modo: <strong id="modeBadge">acompañado</strong></span>
+              </div>
+            </div>
+            <div class="screen-card">
+              <div class="actions">
+                <button class="secondary-btn" data-go="screen-contacts">Contacto</button>
+                <button class="secondary-btn" data-go="screen-settings">Proteccion</button>
+              </div>
+              <div class="actions">
+                <button class="secondary-btn" data-go="screen-history">Historial</button>
+                <button class="secondary-btn" data-go="screen-number-check">Verificar numero</button>
+              </div>
+            </div>
+            <div class="nav-dock">
+              <button class="active" data-go="screen-home">Inicio</button>
+              <button data-go="screen-analyze">Mensajes</button>
+              <button data-go="screen-help">Ayuda</button>
+              <button data-go="screen-settings">Ajustes</button>
+            </div>
+          </div>
+
+          <div id="screen-analyze" class="screen">
+            <div class="status-bar">
+              <span>9:45</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">2 clics a resultado</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Analizar mensaje sospechoso</h3>
+              <p class="section-copy">Pega un texto como llegaria desde WhatsApp, SMS o una nota de voz transcripta por un familiar.</p>
+              <div class="field">
+                <label for="messageInput">Mensaje</label>
+                <textarea id="messageInput" placeholder="Ejemplo: Hola mama, cambié de numero. Necesito que me transfieras urgente y me pases el codigo que te llega."></textarea>
+              </div>
+              <div class="actions">
+                <button class="secondary-btn" id="loadExample">Cargar ejemplo</button>
+                <button class="cta" id="analyzeButton">Analizar ahora</button>
+              </div>
+            </div>
+            <div id="analysisResult" class="result-box screen-card">
+              <div id="analysisHighlight" class="highlight alert">
+                <div>
+                  <strong id="analysisTitle">Riesgo alto</strong>
+                  <span id="analysisDescription">Este mensaje parece una estafa.</span>
+                </div>
+                <em id="analysisLabel">Alto</em>
+              </div>
+              <strong>Senales detectadas</strong>
+              <ul id="analysisSignals"></ul>
+              <strong style="display:block; margin-top:14px;">Accion sugerida</strong>
+              <p id="analysisAction" class="section-copy" style="margin-bottom:0;"></p>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="danger-btn" id="analysisHelp">Avisar a mi contacto</button>
+            </div>
+          </div>
+
+          <div id="screen-help" class="screen">
+            <div class="status-bar">
+              <span>9:46</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Ayuda inmediata</span>
+            </div>
+            <div class="screen-card screen-hero">
+              <span class="tag">No estoy seguro</span>
+              <h2>No quedarte solo es parte del producto.</h2>
+              <p>Esta pantalla resuelve la duda en uno o dos toques. El familiar de confianza es central en el MVP.</p>
+            </div>
+            <div class="screen-card">
+              <div class="highlight alert">
+                <div>
+                  <strong id="helpContactName">Contacto pendiente</strong>
+                  <span id="helpContactState">Carga un contacto para que esta accion tenga destino real dentro del flujo.</span>
+                </div>
+                <em>Apoyo</em>
+              </div>
+              <button class="danger-btn" id="sendAlert" style="margin-bottom:10px;">Enviar alerta</button>
+              <button class="secondary-btn" id="simulateCall" style="margin-bottom:10px;">Llamar al contacto</button>
+              <button class="secondary-btn" data-go="screen-contacts">Editar contacto de confianza</button>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="cta" data-home>Ir al inicio</button>
+            </div>
+          </div>
+
+          <div id="screen-call-check" class="screen">
+            <div class="status-bar">
+              <span>9:47</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Checklist antifraude</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Chequeo post-llamada</h3>
+              <p class="section-copy">Si te apuraron por telefono, responde estas preguntas y valida si hay senales de riesgo antes de hacer cualquier cosa.</p>
+              <div class="field">
+                <label><input type="checkbox" class="call-check" value="Te pidieron dinero o transferencia"> Te pidieron dinero o transferencia</label>
+              </div>
+              <div class="field">
+                <label><input type="checkbox" class="call-check" value="Te pidieron codigo o clave"> Te pidieron codigo o clave</label>
+              </div>
+              <div class="field">
+                <label><input type="checkbox" class="call-check" value="Dijeron ser del banco o de un familiar"> Dijeron ser del banco o de un familiar</label>
+              </div>
+              <div class="field">
+                <label><input type="checkbox" class="call-check" value="Te apuraron para decidir ya"> Te apuraron para decidir ya</label>
+              </div>
+              <button class="cta" id="evaluateCall">Evaluar llamada</button>
+            </div>
+            <div id="callResult" class="result-box screen-card">
+              <div id="callHighlight" class="highlight warn">
+                <div>
+                  <strong id="callTitle">Riesgo medio</strong>
+                  <span id="callDescription">Conviene pausar y verificar por otro medio.</span>
+                </div>
+                <em id="callLabel">Medio</em>
+              </div>
+              <strong>Indicadores marcados</strong>
+              <ul id="callSignals"></ul>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="danger-btn" data-go="screen-help">Pedir ayuda</button>
+            </div>
+          </div>
+
+          <div id="screen-number-check" class="screen">
+            <div class="status-bar">
+              <span>9:48</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Verificacion manual</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Verificar numero</h3>
+              <p class="section-copy">Simula la revision basica del MVP sobre un numero desconocido o reportado.</p>
+              <div class="field">
+                <label for="phoneInput">Numero</label>
+                <input id="phoneInput" type="tel" placeholder="+54 11 5555 1234">
+              </div>
+              <button class="cta" id="checkNumber">Revisar riesgo</button>
+            </div>
+            <div id="numberResult" class="result-box screen-card">
+              <div id="numberHighlight" class="highlight safe">
+                <div>
+                  <strong id="numberTitle">Sin alertas fuertes</strong>
+                  <span id="numberDescription">No coincide con patrones de alto riesgo en la demo.</span>
+                </div>
+                <em id="numberLabel">Bajo</em>
+              </div>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="cta" data-home>Ir al inicio</button>
+            </div>
+          </div>
+
+          <div id="screen-contacts" class="screen">
+            <div class="status-bar">
+              <span>9:49</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Confianza</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Contacto de confianza</h3>
+              <p class="section-copy">El MVP guarda una persona principal para escalar dudas o presion en tiempo real.</p>
+              <div class="field">
+                <label for="contactName">Nombre</label>
+                <input id="contactName" type="text" placeholder="Ejemplo: Ana">
+              </div>
+              <div class="field">
+                <label for="contactPhone">Telefono</label>
+                <input id="contactPhone" type="tel" placeholder="+54 11 5555 1234">
+              </div>
+              <div class="field">
+                <label for="contactRelation">Relacion</label>
+                <select id="contactRelation">
+                  <option value="Hija">Hija</option>
+                  <option value="Hijo">Hijo</option>
+                  <option value="Nieta">Nieta</option>
+                  <option value="Nieto">Nieto</option>
+                  <option value="Cuidador">Cuidador</option>
+                </select>
+              </div>
+              <div class="actions">
+                <button class="secondary-btn" id="prefillContact">Cargar ejemplo</button>
+                <button class="cta" id="saveContact">Guardar contacto</button>
+              </div>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="cta" data-home>Ir al inicio</button>
+            </div>
+          </div>
+
+          <div id="screen-settings" class="screen">
+            <div class="status-bar">
+              <span>9:50</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Proteccion</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Configuracion simple</h3>
+              <p class="section-copy">Se mantiene deliberadamente corta para el MVP: pocas decisiones, impacto claro.</p>
+              <div class="setting-row">
+                <div>
+                  <strong>Alertas visuales</strong>
+                  <span>Muestra advertencias antes de actuar.</span>
+                </div>
+                <div class="toggle active" data-toggle></div>
+              </div>
+              <div class="setting-row">
+                <div>
+                  <strong>Sugerir pedir ayuda</strong>
+                  <span>Ofrece contactar apoyo cuando detecta riesgo.</span>
+                </div>
+                <div class="toggle active" data-toggle></div>
+              </div>
+              <div class="setting-row">
+                <div>
+                  <strong>Chequeo de llamada</strong>
+                  <span>Habilita el flujo post-llamada sospechosa.</span>
+                </div>
+                <div class="toggle active" data-toggle></div>
+              </div>
+              <div class="setting-row">
+                <div>
+                  <strong>Analisis por texto compartido</strong>
+                  <span>Permite llegar desde otra app a la pantalla de analisis.</span>
+                </div>
+                <div class="toggle active" data-toggle></div>
+              </div>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="cta" id="saveSettings">Guardar cambios</button>
+            </div>
+          </div>
+
+          <div id="screen-history" class="screen">
+            <div class="status-bar">
+              <span>9:51</span>
+              <span>4G • 100%</span>
+            </div>
+            <div class="top-nav">
+              <div class="top-nav-left">
+                <button class="icon-btn" data-back>&larr;</button>
+                <button class="ghost-btn" data-home>Inicio</button>
+              </div>
+              <span class="eyebrow">Registro basico</span>
+            </div>
+            <div class="screen-card">
+              <h3 class="section-title">Historial del MVP</h3>
+              <p class="section-copy">Muestra lo minimo necesario para demostrar trazabilidad: analisis, alertas y revisiones de llamadas.</p>
+              <div class="segmented">
+                <button class="active" data-filter="all">Todo</button>
+                <button data-filter="analysis">Mensajes</button>
+                <button data-filter="help">Ayuda</button>
+                <button data-filter="calls">Llamadas</button>
+              </div>
+              <div id="historyList" class="timeline-list empty-state">Todavia no hay eventos cargados.</div>
+            </div>
+            <div class="sticky-actions">
+              <button class="secondary-btn" data-back>Volver</button>
+              <button class="cta" data-home>Ir al inicio</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">
+    <strong id="toastTitle">Accion realizada</strong>
+    <span id="toastBody">La demo reacciono correctamente.</span>
+  </div>
+
+  <script>
+    const state = {
+      currentScreen: "screen-onboarding-1",
+      historyStack: [],
+      userName: "",
+      userProfile: "adulto mayor",
+      protectionMode: "acompañado",
+      protectionTitle: "Modo acompañado",
+      contact: null,
+      events: []
+    };
+
+    const screens = [...document.querySelectorAll(".screen")];
+    const dockButtons = [...document.querySelectorAll(".nav-dock button")];
+    const historyList = document.getElementById("historyList");
+    const toast = document.getElementById("toast");
+    const toastTitle = document.getElementById("toastTitle");
+    const toastBody = document.getElementById("toastBody");
+
+    function showToast(title, body) {
+      toastTitle.textContent = title;
+      toastBody.textContent = body;
+      toast.classList.add("visible");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("visible"), 2600);
+    }
+
+    function recordEvent(type, title, detail) {
+      state.events.unshift({
+        type,
+        title,
+        detail,
+        time: new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })
+      });
+      renderHistory();
+    }
+
+    function navigateTo(screenId, push = true) {
+      if (push && state.currentScreen !== screenId) {
+        state.historyStack.push(state.currentScreen);
+      }
+      state.currentScreen = screenId;
+      screens.forEach((screen) => screen.classList.toggle("active", screen.id === screenId));
+      dockButtons.forEach((button) => button.classList.toggle("active", button.dataset.go === screenId));
+    }
+
+    function navigateBack() {
+      const previous = state.historyStack.pop();
+      if (previous) {
+        navigateTo(previous, false);
+      } else {
+        navigateHome();
+      }
+    }
+
+    function navigateHome() {
+      navigateTo("screen-home", state.currentScreen !== "screen-home");
+    }
+
+    function updateHome() {
+      const greeting = document.getElementById("homeGreeting");
+      const summary = document.getElementById("homeSummary");
+      const contactBadge = document.getElementById("contactBadge");
+      const modeBadge = document.getElementById("modeBadge");
+      const helpContactName = document.getElementById("helpContactName");
+      const helpContactState = document.getElementById("helpContactState");
+      const homeName = state.userName ? `Hola, ${state.userName}.` : "Hola.";
+
+      greeting.textContent = homeName;
+      summary.textContent = `${state.protectionTitle}. ${state.contact ? `Tu contacto principal es ${state.contact.name}.` : "Todavia no cargaste un contacto de confianza."}`;
+      contactBadge.textContent = state.contact ? state.contact.name : "sin definir";
+      modeBadge.textContent = state.protectionMode;
+      helpContactName.textContent = state.contact ? `${state.contact.name} (${state.contact.relation})` : "Contacto pendiente";
+      helpContactState.textContent = state.contact
+        ? `Telefono ${state.contact.phone}. La accion puede escalarse en 1 toque.`
+        : "Carga un contacto para que esta accion tenga destino real dentro del flujo.";
+    }
+
+    function renderHistory(filter = "all") {
+      const items = state.events.filter((event) => {
+        if (filter === "all") return true;
+        if (filter === "calls") return event.type === "calls";
+        return event.type === filter;
+      });
+
+      if (!items.length) {
+        historyList.className = "timeline-list empty-state";
+        historyList.innerHTML = "Todavia no hay eventos cargados.";
+        return;
+      }
+
+      historyList.className = "";
+      historyList.innerHTML = items.map((event) => `
+        <div class="timeline-item">
+          <strong>${event.title}</strong>
+          <span>${event.detail}</span>
+          <div style="margin-top:8px; color:#143d8d; font-size:0.76rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;">
+            ${event.time}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function setAnalysisUI(level, title, description, signals, action) {
+      const result = document.getElementById("analysisResult");
+      const highlight = document.getElementById("analysisHighlight");
+      const titleNode = document.getElementById("analysisTitle");
+      const descriptionNode = document.getElementById("analysisDescription");
+      const labelNode = document.getElementById("analysisLabel");
+      const signalsNode = document.getElementById("analysisSignals");
+      const actionNode = document.getElementById("analysisAction");
+
+      highlight.className = `highlight ${level}`;
+      titleNode.textContent = title;
+      descriptionNode.textContent = description;
+      labelNode.textContent = level === "alert" ? "Alto" : level === "warn" ? "Medio" : "Bajo";
+      signalsNode.innerHTML = signals.map((signal) => `<li>${signal}</li>`).join("");
+      actionNode.textContent = action;
+      result.classList.add("visible");
+    }
+
+    function analyzeMessage() {
+      const message = document.getElementById("messageInput").value.trim().toLowerCase();
+      if (!message) {
+        showToast("Falta contenido", "Pega un mensaje para que el prototipo pueda analizarlo.");
+        return;
+      }
+
+      const rules = [
+        { pattern: /urgente|ahora|ya|apuro/, signal: "Aparece urgencia o presion temporal." },
+        { pattern: /transfer|dinero|deposit|pago/, signal: "Se menciona dinero o transferencia." },
+        { pattern: /codigo|clave|token|pin/, signal: "Piden codigo, clave o token." },
+        { pattern: /banco|cuenta|tarjeta/, signal: "Usa identidad bancaria o financiera." },
+        { pattern: /mama|papa|abu|hijo|hija|familiar/, signal: "Intenta hacerse pasar por un familiar." },
+        { pattern: /http|www|link/, signal: "Incluye un link sospechoso o de verificacion." }
+      ];
+
+      const matchedSignals = rules.filter((rule) => rule.pattern.test(message)).map((rule) => rule.signal);
+      const score = matchedSignals.length;
+
+      if (score >= 3) {
+        setAnalysisUI(
+          "alert",
+          "Riesgo alto",
+          "Este mensaje parece una estafa y no conviene actuar sin verificar por otro medio.",
+          matchedSignals,
+          "No respondas, no transfieras dinero y avisa a tu contacto de confianza antes de seguir."
+        );
+        recordEvent("analysis", "Analisis de mensaje: riesgo alto", `Se detectaron ${score} senales. ${matchedSignals.join(" ")}`);
+      } else if (score >= 1) {
+        setAnalysisUI(
+          "warn",
+          "Riesgo medio",
+          "Hay senales que justifican pausar y validar con alguien de confianza.",
+          matchedSignals,
+          "No tomes decisiones en caliente. Verifica identidad por llamada directa o contacto alternativo."
+        );
+        recordEvent("analysis", "Analisis de mensaje: riesgo medio", `Se detectaron ${score} senales. ${matchedSignals.join(" ")}`);
+      } else {
+        setAnalysisUI(
+          "safe",
+          "Riesgo bajo",
+          "No aparecen senales fuertes en esta demo, pero igual conviene verificar si hay dudas.",
+          ["No se encontraron patrones clasicos de urgencia, codigos ni transferencias."],
+          "Si el contexto igual te genera duda, usa el boton de ayuda antes de actuar."
+        );
+        recordEvent("analysis", "Analisis de mensaje: riesgo bajo", "No se detectaron patrones fuertes en la demo.");
+      }
+    }
+
+    function evaluateCall() {
+      const selected = [...document.querySelectorAll(".call-check:checked")].map((input) => input.value);
+      const result = document.getElementById("callResult");
+      const highlight = document.getElementById("callHighlight");
+      const title = document.getElementById("callTitle");
+      const description = document.getElementById("callDescription");
+      const label = document.getElementById("callLabel");
+      const list = document.getElementById("callSignals");
+
+      if (!selected.length) {
+        highlight.className = "highlight safe";
+        title.textContent = "Sin alertas fuertes";
+        description.textContent = "No marcaste indicadores de riesgo en la llamada.";
+        label.textContent = "Bajo";
+        list.innerHTML = "<li>No se registraron senales en el checklist.</li>";
+        result.classList.add("visible");
+        recordEvent("calls", "Chequeo de llamada: riesgo bajo", "No se marcaron senales en el checklist.");
+        return;
+      }
+
+      if (selected.length >= 3) {
+        highlight.className = "highlight alert";
+        title.textContent = "Riesgo alto";
+        description.textContent = "La llamada combina demasiadas senales de estafa o coercion.";
+        label.textContent = "Alto";
+      } else {
+        highlight.className = "highlight warn";
+        title.textContent = "Riesgo medio";
+        description.textContent = "Conviene no avanzar hasta verificar por otro canal.";
+        label.textContent = "Medio";
+      }
+
+      list.innerHTML = selected.map((item) => `<li>${item}</li>`).join("");
+      result.classList.add("visible");
+      recordEvent("calls", `Chequeo de llamada: ${selected.length >= 3 ? "riesgo alto" : "riesgo medio"}`, selected.join(" "));
+    }
+
+    function checkNumber() {
+      const value = document.getElementById("phoneInput").value.trim();
+      const result = document.getElementById("numberResult");
+      const highlight = document.getElementById("numberHighlight");
+      const title = document.getElementById("numberTitle");
+      const description = document.getElementById("numberDescription");
+      const label = document.getElementById("numberLabel");
+
+      if (!value) {
+        showToast("Falta numero", "Ingresa un numero para probar el chequeo del MVP.");
+        return;
+      }
+
+      const suspicious = /000|666|999|11 5555|1234$/.test(value.replace(/\s+/g, ""));
+      if (suspicious) {
+        highlight.className = "highlight alert";
+        title.textContent = "Posible llamada riesgosa";
+        description.textContent = "El numero coincide con patrones usados como ejemplo en la demo.";
+        label.textContent = "Alto";
+        recordEvent("calls", "Verificacion de numero: alerta alta", `Numero revisado: ${value}`);
+      } else {
+        highlight.className = "highlight safe";
+        title.textContent = "Sin alertas fuertes";
+        description.textContent = "No coincide con patrones de alto riesgo en la demo.";
+        label.textContent = "Bajo";
+        recordEvent("calls", "Verificacion de numero: sin alertas fuertes", `Numero revisado: ${value}`);
+      }
+      result.classList.add("visible");
+    }
+
+    document.querySelectorAll("[data-go]").forEach((button) => {
+      button.addEventListener("click", () => navigateTo(button.dataset.go));
+    });
+
+    document.querySelectorAll("[data-back]").forEach((button) => {
+      button.addEventListener("click", navigateBack);
+    });
+
+    document.querySelectorAll("[data-home]").forEach((button) => {
+      button.addEventListener("click", navigateHome);
+    });
+
+    document.querySelectorAll("[data-mode-card]").forEach((card) => {
+      card.addEventListener("click", () => {
+        document.querySelectorAll("[data-mode-card]").forEach((other) => other.classList.remove("active"));
+        card.classList.add("active");
+        state.protectionMode = card.dataset.modeCard;
+        state.protectionTitle = card.dataset.modeTitle;
+      });
+    });
+
+    document.querySelectorAll("[data-toggle]").forEach((toggle) => {
+      toggle.addEventListener("click", () => toggle.classList.toggle("active"));
+    });
+
+    document.getElementById("continueToLevel").addEventListener("click", () => {
+      state.userName = document.getElementById("userName").value.trim();
+      state.userProfile = document.getElementById("userAge").value;
+      navigateTo("screen-onboarding-3");
+    });
+
+    document.getElementById("finishOnboarding").addEventListener("click", () => {
+      updateHome();
+      recordEvent("help", "Onboarding completado", `Perfil ${state.userProfile}. Nivel ${state.protectionTitle}.`);
+      navigateHome();
+      showToast("Configuracion lista", "El usuario ya puede analizar mensajes o pedir ayuda.");
+    });
+
+    document.getElementById("loadExample").addEventListener("click", () => {
+      document.getElementById("messageInput").value = "Hola mama, cambie de numero. Necesito que me transfieras urgente y me pases el codigo que te llega para validar la cuenta.";
+    });
+
+    document.getElementById("analyzeButton").addEventListener("click", analyzeMessage);
+
+    document.getElementById("analysisHelp").addEventListener("click", () => {
+      navigateTo("screen-help");
+      showToast("Escalado rapido", "El flujo llevo del mensaje sospechoso al pedido de ayuda.");
+    });
+
+    document.getElementById("prefillContact").addEventListener("click", () => {
+      document.getElementById("contactName").value = "Ana";
+      document.getElementById("contactPhone").value = "+54 11 5555 1234";
+      document.getElementById("contactRelation").value = "Hija";
+    });
+
+    document.getElementById("saveContact").addEventListener("click", () => {
+      const name = document.getElementById("contactName").value.trim();
+      const phone = document.getElementById("contactPhone").value.trim();
+      const relation = document.getElementById("contactRelation").value;
+
+      if (!name || !phone) {
+        showToast("Datos incompletos", "Carga nombre y telefono para guardar el contacto.");
+        return;
+      }
+
+      state.contact = { name, phone, relation };
+      updateHome();
+      recordEvent("help", "Contacto de confianza actualizado", `${name} (${relation}) - ${phone}`);
+      navigateHome();
+      showToast("Contacto guardado", `${name} quedo como apoyo principal del flujo.`);
+    });
+
+    document.getElementById("sendAlert").addEventListener("click", () => {
+      const contactName = state.contact ? state.contact.name : "tu contacto";
+      recordEvent("help", "Alerta enviada", `Se envio una alerta manual a ${contactName}.`);
+      showToast("Alerta enviada", state.contact ? `Se notifico a ${state.contact.name}.` : "La demo simulo el envio de ayuda.");
+    });
+
+    document.getElementById("simulateCall").addEventListener("click", () => {
+      const target = state.contact ? `${state.contact.name} al ${state.contact.phone}` : "un contacto de confianza";
+      recordEvent("help", "Llamada de apoyo iniciada", `Se inicio una llamada a ${target}.`);
+      showToast("Llamada iniciada", `La demo intento contactar a ${target}.`);
+    });
+
+    document.getElementById("evaluateCall").addEventListener("click", evaluateCall);
+    document.getElementById("checkNumber").addEventListener("click", checkNumber);
+
+    document.getElementById("saveSettings").addEventListener("click", () => {
+      recordEvent("help", "Configuracion guardada", `Modo activo: ${state.protectionTitle}.`);
+      showToast("Cambios guardados", "La proteccion del MVP se actualizo.");
+    });
+
+    document.querySelectorAll("[data-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-filter]").forEach((other) => other.classList.remove("active"));
+        button.classList.add("active");
+        renderHistory(button.dataset.filter);
+      });
+    });
+
+    updateHome();
+    renderHistory();
+  </script>
+</body>
+</html>
