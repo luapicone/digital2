@@ -58,38 +58,12 @@
     }
 
     .shell {
-      max-width: 1320px;
-      margin: 0 auto;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 28px 20px 40px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 28px;
-      align-items: start;
-    }
-
-    .summary {
-      background: var(--panel);
-      backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.55);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      padding: 32px;
-      position: sticky;
-      top: 24px;
-      overflow: hidden;
-    }
-
-    .summary::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(135deg, rgba(20, 61, 141, 0.1), transparent 45%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 40%);
-      pointer-events: none;
     }
 
     .eyebrow {
@@ -104,124 +78,6 @@
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-    }
-
-    .summary h1 {
-      margin: 18px 0 14px;
-      font-family: "Fraunces", serif;
-      font-size: clamp(2.6rem, 4vw, 4.6rem);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
-    }
-
-    .summary p {
-      margin: 0 0 18px;
-      color: var(--ink-soft);
-      font-size: 1rem;
-      line-height: 1.72;
-      max-width: 62ch;
-    }
-
-    .pill-row,
-    .principles,
-    .quick-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .pill-row {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin: 24px 0 18px;
-    }
-
-    .pill {
-      background: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(16, 34, 60, 0.08);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .pill strong {
-      display: block;
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-    }
-
-    .pill span {
-      color: var(--ink-soft);
-      font-size: 0.9rem;
-      line-height: 1.55;
-    }
-
-    .section-label {
-      margin: 26px 0 10px;
-      font-size: 0.76rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      color: var(--brand);
-      text-transform: uppercase;
-    }
-
-    .principles {
-      grid-template-columns: 1fr;
-    }
-
-    .principle {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 14px;
-      align-items: start;
-      background: rgba(255, 255, 255, 0.66);
-      border: 1px solid rgba(16, 34, 60, 0.08);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .principle .num {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--brand);
-      color: #fff;
-      font-weight: 800;
-    }
-
-    .principle strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.98rem;
-    }
-
-    .principle span {
-      color: var(--ink-soft);
-      font-size: 0.93rem;
-      line-height: 1.55;
-    }
-
-    .quick-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin-top: 18px;
-    }
-
-    .quick-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px;
-      border: 1px solid rgba(16, 34, 60, 0.08);
-    }
-
-    .quick-card strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.95rem;
-    }
-
-    .quick-card p {
-      margin: 0;
-      font-size: 0.9rem;
-      line-height: 1.55;
     }
 
     .prototype-wrap {
@@ -783,29 +639,9 @@
       background: rgba(255, 255, 255, 0.5);
     }
 
-    @media (max-width: 1100px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .summary {
-        position: static;
-      }
-    }
-
     @media (max-width: 720px) {
       .shell {
         padding: 18px 12px 28px;
-      }
-
-      .summary {
-        padding: 24px 18px;
-        border-radius: 24px;
-      }
-
-      .pill-row,
-      .quick-grid {
-        grid-template-columns: 1fr;
       }
 
       .phone {
@@ -820,78 +656,8 @@
 </head>
 <body>
   <div class="shell">
-    <div class="hero">
-      <section class="summary">
-        <span class="eyebrow">MVP HTML interactivo</span>
-        <h1>Proteccion Antiestafas para Android</h1>
-        <p>
-          Prototipo funcional en HTML, pensado para mostrar el flujo principal de la app en no mas de 3 clics por tarea critica.
-          El foco esta puesto en analizar mensajes sospechosos, pedir ayuda rapido y cortar decisiones tomadas bajo presion.
-        </p>
-
-        <div class="pill-row">
-          <div class="pill">
-            <strong>1. Regla de 3 clics</strong>
-            <span>Desde Home a resultado o ayuda en 2 o 3 toques.</span>
-          </div>
-          <div class="pill">
-            <strong>2. Interactividad real</strong>
-            <span>Formulario, analisis dinamico, estados, toggles y feedback visual.</span>
-          </div>
-          <div class="pill">
-            <strong>3. Way back claro</strong>
-            <span>Todas las pantallas intermedias tienen `Volver` o `Inicio`.</span>
-          </div>
-        </div>
-
-        <div class="section-label">Pantallas MVP</div>
-        <div class="quick-grid">
-          <div class="quick-card">
-            <strong>Onboarding minimo</strong>
-            <p>Presenta la propuesta, deja un nombre, elige nivel de proteccion y entra.</p>
-          </div>
-          <div class="quick-card">
-            <strong>Home simple</strong>
-            <p>Analizar mensaje, pedir ayuda, chequeo post-llamada y accesos secundarios.</p>
-          </div>
-          <div class="quick-card">
-            <strong>Analisis guiado</strong>
-            <p>Recibe mensaje copiado, detecta urgencia, bancos, links, codigos y transferencias.</p>
-          </div>
-          <div class="quick-card">
-            <strong>Contacto de confianza</strong>
-            <p>Alta rapida de contacto y accion directa para pedir apoyo en contexto.</p>
-          </div>
-        </div>
-
-        <div class="section-label">Requisitos del prototipo</div>
-        <div class="principles">
-          <div class="principle">
-            <div class="num">01</div>
-            <div>
-              <strong>Flujo principal sin perdida</strong>
-              <span>El usuario llega a una recomendacion clara sin menus profundos ni pasos escondidos.</span>
-            </div>
-          </div>
-          <div class="principle">
-            <div class="num">02</div>
-            <div>
-              <strong>Botones reactivos y estados visibles</strong>
-              <span>La demo responde con resultados, toasts, resaltados y cambios de proteccion.</span>
-            </div>
-          </div>
-          <div class="principle">
-            <div class="num">03</div>
-            <div>
-              <strong>Retorno permanente</strong>
-              <span>Desde cualquier paso intermedio se puede volver atras o regresar directo al inicio.</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="prototype-wrap">
-        <div class="phone">
+    <div class="prototype-wrap">
+      <div class="phone">
           <div id="screen-onboarding-1" class="screen active" data-root="true">
             <div class="status-bar">
               <span>9:41</span>
@@ -1325,7 +1091,6 @@
               <button class="cta" data-home>Ir al inicio</button>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
