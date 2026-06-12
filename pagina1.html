@@ -242,7 +242,14 @@
       letter-spacing: -.03em;
     }
     .hero-copy h1 {
-      font-size: clamp(2.7rem, 5vw, 4.9rem);
+      font-size: clamp(1.95rem, 3.15vw, 2.85rem);
+      line-height: .94;
+      max-width: 22ch;
+      text-wrap: balance;
+    }
+    .hero-copy h1 .title-line {
+      display: block;
+      white-space: nowrap;
     }
     h2 {
       font-family: var(--title);
@@ -1203,8 +1210,9 @@
               UX Research Report · 2026
             </div>
             <h1>
-              Un mensaje urgente, una decisión en segundos,
-              <span class="hl">y una familia que muchas veces llega tarde.</span>
+              <span class="title-line">Un mensaje urgente,</span>
+              <span class="title-line">una decisión en segundos,</span>
+              <span class="title-line hl">y una familia que muchas veces llega tarde.</span>
             </h1>
             <p class="hero-desc">Todo empieza con una situación cotidiana: una persona mayor recibe un mensaje o una llamada que parece real, duda por un instante y debe decidir bajo presión. Esta presentación reconstruye cómo validamos ese problema, qué aprendimos de usuarios y familiares, y cómo esa vulnerabilidad se tradujo en una primera propuesta de solución.</p>
             <div class="badge-row">
