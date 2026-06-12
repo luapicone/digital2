@@ -353,9 +353,9 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1fr .9fr;
-      gap: 60px;
-      align-items: center;
+      grid-template-columns: 1fr;
+      gap: 36px;
+      align-items: start;
     }
 
     .hero-tag {
@@ -425,6 +425,8 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      margin-top: 26px;
+      max-width: 760px;
     }
     .hero-stat-main {
       background: linear-gradient(145deg, rgba(232,98,42,0.1), rgba(240,144,64,0.05));
@@ -1214,6 +1216,23 @@
               <span class="title-line">una decisión en segundos,</span>
               <span class="title-line hl">y una familia que muchas veces llega tarde.</span>
             </h1>
+            <div class="hero-panel reveal" style="transition-delay:.15s">
+              <div class="hero-stat-main">
+                <div class="stat-label">Validación primaria ejecutada</div>
+                <div class="stat-value" data-counter="17">0</div>
+                <p class="stat-desc">respuestas reales ya relevadas para entender vulnerabilidad, utilidad percibida y rol de la familia en la prevención.</p>
+              </div>
+              <div class="hero-mini-grid">
+                <div class="hero-mini">
+                  <div class="mini-val">147.127</div>
+                  <p>denuncias de elder fraud reportadas por IC3 en 2024</p>
+                </div>
+                <div class="hero-mini">
+                  <div class="mini-val">USD 4,9B</div>
+                  <p>pérdidas asociadas a elder fraud en 2024 según IC3</p>
+                </div>
+              </div>
+            </div>
             <p class="hero-desc">Todo empieza con una situación cotidiana: una persona mayor recibe un mensaje o una llamada que parece real, duda por un instante y debe decidir bajo presión. Esta presentación reconstruye cómo validamos ese problema, qué aprendimos de usuarios y familiares, y cómo esa vulnerabilidad se tradujo en una primera propuesta de solución.</p>
             <div class="badge-row">
               <span class="badge"><span class="badge-icon">📚</span> Desk Research</span>
@@ -1227,23 +1246,6 @@
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M3 7l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
               Scroll para la lectura completa
-            </div>
-          </div>
-          <div class="hero-panel reveal" style="transition-delay:.15s">
-            <div class="hero-stat-main">
-              <div class="stat-label">Validación primaria ejecutada</div>
-              <div class="stat-value" data-counter="17">0</div>
-              <p class="stat-desc">respuestas reales ya relevadas para entender vulnerabilidad, utilidad percibida y rol de la familia en la prevención.</p>
-            </div>
-            <div class="hero-mini-grid">
-              <div class="hero-mini">
-                <div class="mini-val">147.127</div>
-                <p>denuncias de elder fraud reportadas por IC3 en 2024</p>
-              </div>
-              <div class="hero-mini">
-                <div class="mini-val">USD 4,9B</div>
-                <p>pérdidas asociadas a elder fraud en 2024 según IC3</p>
-              </div>
             </div>
           </div>
         </div>
